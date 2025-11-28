@@ -8,6 +8,7 @@ namespace Pitomnik.Models
         }
 
         public override void MakeSound() => Console.WriteLine("Meow");
+        public override void Feed() => Console.WriteLine($"{Name} eats fish and purrs softly");
         
     }
 }

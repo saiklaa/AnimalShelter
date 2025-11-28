@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Pitomnik.Models;
 
 public class Shelter
@@ -25,4 +26,24 @@ public class Shelter
             }
             return false;
         }
+
+        public void FeedAll()
+        {
+            foreach (var animal in _animals)
+            {
+                Console.Write($"Feeding {animal.Name}: ");
+                animal.Feed();
+            }
+        }
+
+        public void FeedAnimal(string name)
+    {
+        var animal = _animals.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if(animal != null)
+        {
+            Console.Write($"Feeding {animal.Name}: ");
+            animal.Feed();
+        }
+        else Console.WriteLine($"Animal with '{name}' not found.");
+    }
     }

@@ -8,6 +8,6 @@ namespace Pitomnik.Models
         }
 
         public override void MakeSound() => Console.WriteLine("Tweet");
-        
+        public override void Feed() => Console.WriteLine($"{Name} pecking seeds");
     }
 }
