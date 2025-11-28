@@ -10,23 +10,30 @@ namespace Pitomnik.Service;
 
         public void Run()
         {
-            while (true)
+            try
             {
-                Console.WriteLine("1. Add Animal.\n2. Show All.\n3. Listen to all.\n4. Delete animal\n5. Show by type\n6. Show JSON\n7. Feed all animals\n8. Feed specific animal\n0. Exit");
-                var choice = Console.ReadLine();
-                switch (choice)
+                while (true)
                 {
-                    case "1": Add(); break;
-                    case "2": ShowAll(); break;
-                    case "3": _animalShelter.Sound(); break;
-                    case "4": Delete(); break;
-                    case "5": ShowByType(); break;
-                    case "6": ShowJSON(); break;
-                    case "7": _animalShelter.FeedAll(); break;
-                    case "8": FeedSpecific(); break;
-                    case "0": return;
-                    default: Console.WriteLine("Unknown option."); break;
+                    Console.WriteLine("1. Add Animal.\n2. Show All.\n3. Listen to all.\n4. Delete animal\n5. Show by type\n6. Show JSON\n7. Feed all animals\n8. Feed specific animal\n0. Exit");
+                    var choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1": Add(); break;
+                        case "2": ShowAll(); break;
+                        case "3": _animalShelter.Sound(); break;
+                        case "4": Delete(); break;
+                        case "5": ShowByType(); break;
+                        case "6": ShowJSON(); break;
+                        case "7": _animalShelter.FeedAll(); break;
+                        case "8": FeedSpecific(); break;
+                        case "0": return;
+                        default: Console.WriteLine("Unknown option."); break;
+                    }
                 }
+            }
+            catch(Exception ex)
+            {   
+               Console.WriteLine($"Error: {ex.Message}");     
             }
         }
 

@@ -6,8 +6,15 @@ namespace Pitomnik
     {
         static void Main()
         {
-            var app = new ShelterApp();
-            app.Run();
-        }
+            try
+            {
+                var app = new ShelterApp();
+                app.Run();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }   
     }
 }
