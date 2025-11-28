@@ -1,6 +1,7 @@
-    using Pitomnik.Models;
-    using System.Text.Json;
-    namespace Pitomnik.Service;
+using Pitomnik.Models;
+using System.Text.Json;
+
+namespace Pitomnik.Service;
 
     public class ShelterApp
     {
@@ -31,55 +32,77 @@
         {
             Animal animal = type.ToLower() switch
             {
-                "dog" => new Dog(),
-                "cat" => new Cat(),
-                "bird" => new Bird()
+            "dog" => new Dog(),
+            "cat" => new Cat(),
+            "bird" => new Bird(),
+            _ => throw new ArgumentException("Invalid animal type")
             };
-            animal.Name = name!;
-            animal.Age = age!;
+            animal.Name = name;
+            animal.Age = age; 
             return animal;
         }
         private void Add()
         {
             Console.Write("Animal: ");
             var _type = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(_type))
+            {
+                Console.WriteLine("Type is required.");
+                return;
+            }
             Console.Write("Name: ");
             var _name = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(_name))
+            {
+                Console.WriteLine("Name is required: ");
+                return;
+            }
             Console.Write("Age: ");
-            int _age = int.Parse(Console.ReadLine());
-            var animal = CreateAnimal(_type, _name, _age);
-            _animalShelter.AddAnimal(animal);
-            Console.WriteLine("Animal added successfully.");
+            var ageInput = Console.ReadLine();
+            if(!int.TryParse(ageInput, out int _age) || _age < 0)
+            {
+                Console.WriteLine("Invalid age.");
+                return;
+            }
+
+            try
+            {
+                var animal = CreateAnimal(_type, _name, _age);
+                _animalShelter.AddAnimal(animal);
+                Console.WriteLine("Animal added successfully.");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Failed to add animal: {ex.Message}");
+            }
         }
 
         private void ShowAll()
         {
-            var animal = _animalShelter.GetAll();
-            animal.ForEach(a => Console.Write($"{a.Name} - {a.Age}\n")); 
-        }
+            var animals = _animalShelter.GetAll();
+            foreach (var a in animals)
+            {
+                Console.WriteLine($"{a.Name} - {a.Age}");   
+            }
+        }   
 
         private void Delete()
         {
             Console.Write("Enter name to delete: ");
-            var name = Console.ReadLine();
-            Animal FoundAnimal = null;
-
-            foreach (var animal in _animalShelter.GetAll())
+            var _name = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(_name))
             {
-                if (animal.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    FoundAnimal = animal;
-                    break;
-                }
+                Console.WriteLine("The name is required.");
+                return;
             }
-            if (FoundAnimal != null)
+            try
             {
-                _animalShelter.GetAll ().Remove(FoundAnimal);
-                Console.WriteLine("Animal deleted successfully.");
+                bool removed = _animalShelter.RemoveAnimal(_name);
+                Console.WriteLine(removed ? "Animal deleted successfully." : "Animal not found.");
             }
-            else
-            {
-                Console.WriteLine("Animal not found.");
+            catch (Exception ex)
+            {    
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
@@ -87,6 +110,7 @@
         {
             Console.WriteLine("Enter animal type (Dog, Cat, Bird): ");
             var type = Console.ReadLine();
+           
             var animals = _animalShelter.GetAll().Where(a => a.GetType().Name.Equals(type, StringComparison.OrdinalIgnoreCase)).ToList();
             animals.ForEach(a => Console.WriteLine($"{a.Name} - {a.Age}"));
         }
@@ -95,8 +119,15 @@
         {
             var animals = _animalShelter.GetAll();
             string fileName = "Animals.json";
-            string jsonString = JsonSerializer.Serialize(animals);
-            File.WriteAllText(fileName, jsonString);
-            Console.WriteLine(File.ReadAllText(fileName));
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(animals);
+                File.WriteAllText(fileName, jsonString);
+                Console.WriteLine(File.ReadAllText(fileName));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
