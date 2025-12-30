@@ -44,20 +44,20 @@ public class Shelter
             }
         }
 
-    public void FeedAnimal(string name)
-    {
-        var animal = _animals.FirstOrDefault(a => 
-            string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase));
-        
-        if(animal != null)
+        public void FeedAnimal(string name)
         {
-            Console.Write($"Feeding {animal.Name}: ");
-            animal.Feed();
+            var animal = _animals.FirstOrDefault(a => 
+                string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase));
+            
+            if(animal != null)
+            {
+                Console.Write($"Feeding {animal.Name}: ");
+                animal.Feed();
+            }
+            else 
+            {
+                Console.WriteLine($"Animal with '{name}' not found.");
+            }
         }
-        else 
-        {
-            Console.WriteLine($"Animal with '{name}' not found.");
-        }
-    }
     }
 }
